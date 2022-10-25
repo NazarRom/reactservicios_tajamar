@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import axios from 'axios';
-import Global from '../Global';
+import Global from '../../Global';
+import MaestroEmpleados from './MaestroEmpleados';
 
-export default class DepartamentosEmpleados extends Component {
+export default class MaestroDepartamentos extends Component {
     state = {
         option: [],
         status: false,
-        empleados:[],
-        statusEmp:false
+        idDepartamento: 0
     }
     cajaSelect = React.createRef();
     loadDepartamentos = () => {
@@ -22,17 +22,10 @@ export default class DepartamentosEmpleados extends Component {
     }
     loadEmpleados = (e) =>{
         e.preventDefault();
-        var url = "https://apiempleadosfullstack.azurewebsites.net/";
-        var request = "api/Empleados/EmpleadosDepartamento/";
         var aux = this.cajaSelect.current.value;
-        
-        axios.get(url + request + aux).then(res=>{
-            this.setState({
-                empleados:res.data,
-                statusEmp:true
-            })
-        })
-
+        this.setState({
+            idDepartamento:aux
+        });
     }
     componentDidMount = () => {
         this.loadDepartamentos();
@@ -53,16 +46,12 @@ export default class DepartamentosEmpleados extends Component {
                         )
                     }
                 </select>
+                <h2>Departamentos seleccionados {this.state.idDepartamento}</h2>
                 <button>Ver</button>
                 </form>
-                <ul>
-                    {this.state.statusEmp == true &&
-                        (this.state.empleados.map((empleado,index)=>{
-                            return(<li key={index}>{empleado.apellido}</li>)
-                        })
-                        )
-                    }
-                </ul>
+                {   this.state.idDepartamento != 0 &&
+                    <MaestroEmpleados iddepartamento={this.state.idDepartamento}/>
+                }
             </div>
         )
     }
